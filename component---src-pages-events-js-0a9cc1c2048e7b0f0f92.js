@@ -1,0 +1,2 @@
+webpackJsonp([0xe03105f01a98],{202:function(e,t,a){"use strict";function l(e){return e&&e.__esModule?e:{default:e}}t.__esModule=!0;var u=a(2),n=l(u),o=a(34),f=l(o),c=function(){return n.default.createElement("div",{className:"page"},n.default.createElement("h1",null,"Hi from the events page"),n.default.createElement("p",null,"Welcome to page 2"),n.default.createElement(f.default,{to:"/"},"Go back to the homepage"))};t.default=c,e.exports=t.default}});
+//# sourceMappingURL=component---src-pages-events-js-0a9cc1c2048e7b0f0f92.js.map
