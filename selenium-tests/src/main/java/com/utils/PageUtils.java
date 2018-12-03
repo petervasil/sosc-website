@@ -27,7 +27,6 @@ public class PageUtils {
             String value = getElementValueAsString(field.getAnnotation(ElementDesc.class), driver);
 
 
-
         }
 
 
@@ -60,7 +59,8 @@ public class PageUtils {
                 result = element.getText();
                 break;
 
-            default: throw new NotImplementedException("Not implemented yet for type " + elementDesc.elementType());
+            default:
+                throw new NotImplementedException("Not implemented yet for type " + elementDesc.elementType());
         }
 
         return result;
