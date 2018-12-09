@@ -23,7 +23,7 @@ public class FooterTests {
     }
 
     @Test
-    public void testFooterContent() {
+    public void testFooterContentTexts() {
         Footer footer = (Footer) PageUtils.getObjectFromPage(Footer.class, driver);
 
         Footer expectedFooter = MockFactory.getFooter();

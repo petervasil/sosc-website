@@ -5,6 +5,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -46,6 +48,10 @@ public class PageUtils {
     private static String getElementValueAsString(ElementDesc elementDesc, WebDriver driver) {
 
         String xPath = elementDesc.xPath();
+
+        WebDriverWait wait = new WebDriverWait(driver, 2000);
+
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(xPath))));
 
         WebElement element = driver.findElement(By.xpath(xPath));
 
