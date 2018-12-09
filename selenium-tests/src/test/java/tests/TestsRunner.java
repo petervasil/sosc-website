@@ -8,6 +8,7 @@ import tests.suites.AllTestsSuite;
 public class TestsRunner {
 
     public static void main(String[] args) {
+
         Result result = JUnitCore.runClasses(AllTestsSuite.class);
 
         if (!result.wasSuccessful()) {

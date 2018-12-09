@@ -1,9 +1,7 @@
 package com.utils;
 
 import com.annotations.ElementDesc;
-import com.models.Blog;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.text.WordUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -18,17 +16,23 @@ import java.util.stream.Collectors;
 
 public class PageUtils {
 
-    public static Object getObjectFromPage(Class<?> clazz, WebDriver driver) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public static Object getObjectFromPage(Class<?> clazz, WebDriver driver) {
 
-        Object object = clazz.getDeclaredConstructor().newInstance();
+        Object object = null;
 
-        for (Field field : getFieldsWithSpecificAnnotation(clazz, ElementDesc.class)) {
+        try {
+            object = clazz.getDeclaredConstructor().newInstance();
 
-            String value = getElementValueAsString(field.getAnnotation(ElementDesc.class), driver);
+            for (Field field : getFieldsWithSpecificAnnotation(clazz, ElementDesc.class)) {
 
+                String value = getElementValueAsString(field.getAnnotation(ElementDesc.class), driver);
 
+                setValueToField(object, field, value);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
         return object;
     }
@@ -37,13 +41,6 @@ public class PageUtils {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.getAnnotation(annotationClass) != null)
                 .collect(Collectors.toList());
-    }
-
-    public static void main(String[] args) {
-
-        Blog blog = new Blog();
-
-        System.out.println("Fields " + PageUtils.getFieldsWithSpecificAnnotation(Blog.class, ElementDesc.class));
     }
 
     private static String getElementValueAsString(ElementDesc elementDesc, WebDriver driver) {
@@ -56,9 +53,9 @@ public class PageUtils {
 
         switch (elementDesc.elementType()) {
             case FREE_TEXT:
+            case EDIT_BOX:
                 result = element.getText();
                 break;
-
             default:
                 throw new NotImplementedException("Not implemented yet for type " + elementDesc.elementType());
         }
@@ -67,12 +64,15 @@ public class PageUtils {
     }
 
 
-    private static void setValueToField(Object object, Field field, String value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static void setValueToField(Object object, Field field, String value) throws InvocationTargetException, IllegalAccessException {
 
-        Method setter = object.getClass().getMethod("set" + WordUtils.capitalize(field.getName()));
+        Method setter = Arrays.stream(object.getClass().getMethods())
+                .filter(method -> method.getName().equalsIgnoreCase("set" + field.getName())).findFirst().get();
 
         if (setter.getReturnType() == Boolean.class) {
-            setter.invoke(ConvertUtils.convertStringToBool(value));
+            setter.invoke(object, ConvertUtils.convertStringToBool(value));
+        } else {
+            setter.invoke(object, value);
         }
     }
 
